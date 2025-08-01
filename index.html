@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puppeteers.x - Cosmic Chain Bridge Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cosmic-primary: #6366f1;
+            --cosmic-secondary: #8b5cf6;
+            --cosmic-accent: #06b6d4;
+            --cosmic-success: #10b981;
+            --cosmic-warning: #f59e0b;
+            --cosmic-error: #ef4444;
+            --cosmic-dark: #0f0f23;
+            --cosmic-darker: #050520;
+            --cosmic-light: #f8fafc;
+            --cosmic-gray: #64748b;
+            --cosmic-border: #334155;
+            --cosmic-glass: rgba(255, 255, 255, 0.05);
+            --cosmic-glow: rgba(99, 102, 241, 0.2);
+            
+            /* Puppeteers.x Brand Colors */
+            --puppeteer-primary: #8B5CF6;
+            --puppeteer-secondary: #06B6D4;
+            --puppeteer-accent: #F59E0B;
+            --puppeteer-dark: #1E1B4B;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background: var(--cosmic-darker);
+            color: var(--cosmic-light);
+            overflow-x: hidden;
+        }
+
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #050520 100%);
+            animation: cosmicShift 20s ease-in-out infinite;
+        }
+
+        @keyframes cosmicShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(30deg); }
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: sparkle 10s linear infinite;
+        }
+
+        @keyframes sparkle {
+            from { transform: translateX(0); }
+            to { transform: translateX(-200px); }
+        }
+
+        .cosmic-glass {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cosmic-glow {
+            box-shadow: 0 0 20px var(--cosmic-glow);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', monospace;
+        }
+
+        .interface-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+            background: var(--cosmic-glass);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .switch-btn {
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            background: transparent;
+            color: var(--cosmic-light);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switch-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--cosmic-primary);
+            transform: translateY(-2px);
+        }
+
+        .switch-btn.active {
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            border-color: var(--cosmic-primary);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .interface {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .interface.active {
+            display: block;
+        }
+
+        /* Navigation & Header */
+        .cosmic-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: var(--cosmic-glass);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 24px;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cosmic-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .nav-features {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .feature-badge {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--cosmic-accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .wallet-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--cosmic-success);
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .wallet-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--cosmic-success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Puppeteers.x Domain Badge */
+        .domain-badge {
+            background: linear-gradient(135deg, var(--puppeteer-primary), var(--puppeteer-secondary));
+            border-radius: 12px;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .domain-text {
+            color: white;
+        }
+
+        .unstoppable-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(139, 92, 246, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.6); }
+        }
+
+        /* User Interface Styles */
+        .user-interface {
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 32px;
+        }
+
+        .bridge-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .feature-card {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .cosmic-card {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cosmic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+        }
+
+        .bridge-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .bridge-title h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .bridge-subtitle {
+            color: var(--cosmic-gray);
+            font-size: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .chain-section {
+            margin-bottom: 24px;
+        }
+
+        .section-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--cosmic-light);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chain-selector {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            color: var(--cosmic-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chain-selector::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .chain-selector:hover::before {
+            left: 100%;
+        }
+
+        .chain-selector:hover {
+            border-color: var(--cosmic-primary);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+        }
+
+        .chain-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chain-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .chain-details h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .chain-details p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .swap-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .swap-btn {
+            width: 56px;
+            height: 56px;
+            background: var(--cosmic-glass);
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--cosmic-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .swap-btn:hover {
+            transform: rotate(180deg) scale(1.1);
+            border-color: var(--cosmic-primary);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+        }
+
+        .token-section {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 24px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .token-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .balance-info {
+            font-size: 14px;
+            color: var(--cosmic-gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .token-input-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .token-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px 20px;
+            min-width: 140px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .token-selector:hover {
+            border-color: var(--cosmic-primary);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.2);
+        }
+
+        .token-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--cosmic-accent), var(--cosmic-success));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .amount-input {
+            flex: 1;
+            font-size: 28px;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            outline: none;
+            text-align: right;
+            color: var(--cosmic-light);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .amount-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .token-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .usd-value {
+            color: var(--cosmic-gray);
+        }
+
+        .max-btn {
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .max-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .routes-section {
+            margin: 32px 0;
+        }
+
+        .route-option {
+            background: var(--cosmic-glass);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .route-option.selected {
+            border-color: var(--cosmic-primary);
+            background: rgba(99, 102, 241, 0.1);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+        }
+
+        .route-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .route-option:hover::before {
+            left: 100%;
+        }
+
+        .route-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .route-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .protocol-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+        }
+
+        .protocol-indicator.axelar {
+            background: linear-gradient(135deg, var(--cosmic-accent), var(--cosmic-success));
+        }
+
+        .route-details h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--cosmic-light);
+        }
+
+        .route-details p {
+            font-size: 14px;
+            color: var(--cosmic-gray);
+        }
+
+        .route-stats {
+            text-align: right;
+        }
+
+        .route-fee {
+            font-weight: 600;
+            color: var(--cosmic-light);
+            margin-bottom: 4px;
+        }
+
+        .route-time {
+            font-size: 14px;
+            color: var(--cosmic-gray);
+            margin-bottom: 4px;
+        }
+
+        .best-rate {
+            font-size: 12px;
+            color: var(--cosmic-success);
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .cosmic-btn {
+            width: 100%;
+            padding: 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cosmic-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .cosmic-btn:hover::before {
+            left: 100%;
+        }
+
+        .cosmic-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .cosmic-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .info-panel {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--cosmic-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+        }
+
+        .info-content {
+            color: var(--cosmic-light);
+            font-size: 14px;
+        }
+
+        .info-list {
+            list-style: none;
+            margin: 12px 0 0 0;
+            padding: 0;
+        }
+
+        .info-list li {
+            color: rgba(6, 182, 212, 0.9);
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .info-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--cosmic-accent);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .sidebar-card {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.15);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--cosmic-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .view-all-btn {
+            color: var(--cosmic-primary);
+            font-size: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .view-all-btn:hover {
+            color: var(--cosmic-accent);
+        }
+
+        .tx-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tx-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .tx-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .tx-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tx-status {
+            font-size: 16px;
+        }
+
+        .tx-details h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--cosmic-light);
+            margin-bottom: 4px;
+        }
+
+        .tx-details p {
+            font-size: 12px;
+            color: var(--cosmic-gray);
+        }
+
+        .tx-time {
+            font-size: 12px;
+            color: var(--cosmic-gray);
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: var(--cosmic-gray);
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .stat-value.success {
+            color: var(--cosmic-success);
+        }
+
+        .stat-value.primary {
+            color: var(--cosmic-primary);
+        }
+
+        .support-card {
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            border: none;
+            color: white;
+        }
+
+        .support-content {
+            text-align: center;
+        }
+
+        .support-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .support-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .support-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .support-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .support-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Admin Dashboard Styles */
+        .admin-dashboard {
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .admin-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .admin-subtitle {
+            color: var(--cosmic-gray);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .admin-stat-card {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+        }
+
+        .admin-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .stat-card-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-data h3 {
+            color: var(--cosmic-gray);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--cosmic-light);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .stat-value.success {
+            color: var(--cosmic-success);
+        }
+
+        .admin-main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+        }
+
+        .admin-card {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+
+        .admin-card-header {
+            padding: 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .admin-card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--cosmic-light);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .admin-card-content {
+            padding: 32px;
+        }
+
+        .admin-tx-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tx-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateX(4px);
+        }
+
+        .admin-tx-main {
+            flex: 1;
+        }
+
+        .admin-tx-id {
+            font-weight: 600;
+            color: var(--cosmic-light);
+            margin-bottom: 4px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .admin-tx-route {
+            color: var(--cosmic-gray);
+            font-size: 14px;
+        }
+
+        .admin-tx-amount {
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .admin-tx-value {
+            font-weight: 600;
+            color: var(--cosmic-light);
+            margin-bottom: 4px;
+        }
+
+        .admin-tx-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .admin-tx-status.completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--cosmic-success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .admin-tx-status.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--cosmic-warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .admin-tx-time {
+            text-align: right;
+            font-size: 12px;
+            color: var(--cosmic-gray);
+        }
+
+        .admin-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .alert-item {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border-left: 4px solid var(--cosmic-primary);
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .alert-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .alert-item.warning {
+            border-left-color: var(--cosmic-warning);
+        }
+
+        .alert-item.success {
+            border-left-color: var(--cosmic-success);
+        }
+
+        .alert-content {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .alert-icon {
+            font-size: 16px;
+        }
+
+        .alert-text {
+            flex: 1;
+        }
+
+        .alert-message {
+            font-size: 14px;
+            color: var(--cosmic-light);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .alert-time {
+            font-size: 12px;
+            color: var(--cosmic-gray);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--cosmic-light);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--cosmic-primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-container,
+            .admin-main-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cosmic-nav {
+                padding: 12px 16px;
+            }
+            
+            .nav-features {
+                display: none;
+            }
+            
+            .cosmic-logo {
+                font-size: 20px;
+            }
+            
+            .interface-switcher {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
+            
+            .main-container,
+            .admin-container {
+                padding: 20px 16px;
+            }
+            
+            .cosmic-card,
+            .admin-card {
+                padding: 20px;
+            }
+            
+            .bridge-title h2 {
+                font-size: 28px;
+            }
+            
+            .admin-title {
+                font-size: 32px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .token-input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .amount-input {
+                text-align: center;
+                font-size: 24px;
+            }
+            
+            .route-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            
+            .route-stats {
+                text-align: left;
+            }
+        }
+
+        /* Loading and Animation States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--cosmic-primary);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Utility Classes */
+        .text-cosmic-primary { color: var(--cosmic-primary); }
+        .text-cosmic-secondary { color: var(--cosmic-secondary); }
+        .text-cosmic-accent { color: var(--cosmic-accent); }
+        .text-cosmic-success { color: var(--cosmic-success); }
+        .text-cosmic-warning { color: var(--cosmic-warning); }
+        .text-cosmic-error { color: var(--cosmic-error); }
+        
+        .bg-cosmic-primary { background-color: var(--cosmic-primary); }
+        .bg-cosmic-secondary { background-color: var(--cosmic-secondary); }
+        .bg-cosmic-accent { background-color: var(--cosmic-accent); }
+        .bg-cosmic-success { background-color: var(--cosmic-success); }
+        .bg-cosmic-warning { background-color: var(--cosmic-warning); }
+        .bg-cosmic-error { background-color: var(--cosmic-error); }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    <div class="stars"></div>
+
+    <!-- Cosmic Navigation -->
+    <nav class="cosmic-nav">
+        <div class="nav-container">
+            <div class="cosmic-logo">
+                <div class="logo-icon">�</div>
+                Puppeteers.x
+                <span style="font-size: 14px; opacity: 0.7; margin-left: 8px;">Cosmic Chain Platform</span>
+            </div>
+            
+            <div class="nav-features">
+                <div class="feature-badge">
+                    <span>⚡</span>
+                    32 Features
+                </div>
+                <div class="feature-badge">
+                    <span>🌐</span>
+                    6+ Networks
+                </div>
+                <div class="feature-badge">
+                    <span>🛡️</span>
+                    Enterprise Security
+                </div>
+            </div>
+            
+            <div class="wallet-status">
+                <div class="wallet-dot"></div>
+                0x742d...8f3a
+            </div>
+        </div>
+    </nav>
+
+    <!-- Interface Switcher -->
+    <div class="interface-switcher">
+        <button class="switch-btn active" onclick="showInterface('user')">
+            <span>👤</span>
+            User Interface
+        </button>
+        <button class="switch-btn" onclick="showInterface('admin')">
+            <span>🛠️</span>
+            Admin Dashboard
+        </button>
+    </div>
+
+    <!-- User Interface -->
+    <div id="user-interface" class="interface active">
+        <div class="user-interface">
+            <!-- Header -->
+            <div class="header">
+                <h1 class="logo">� Cosmic Chain - Beyond Boundaries</h1>
+                <div class="wallet-status">
+                    <div class="wallet-dot"></div>
+                    0x742d...8f3a
+                </div>
+            </div>
+
+            <div class="bridge-container">
+                <!-- Main Bridge Interface -->
+                <div class="bridge-card">
+                    <div class="bridge-title">
+                        <h2>Cross-Chain Bridge</h2>
+                        <p style="color: #6b7280;">Transfer tokens seamlessly across blockchains</p>
+                    </div>
+
+                    <!-- From Chain -->
+                    <div>
+                        <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 8px;">From</label>
+                        <div class="chain-selector">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="chain-info">
+                                    <div style="font-size: 24px;">🔷</div>
+                                    <div>
+                                        <h3 style="font-size: 18px; font-weight: 600;">Ethereum</h3>
+                                        <p style="font-size: 14px; opacity: 0.9;">ETH</p>
+                                    </div>
+                                </div>
+                                <div style="font-size: 20px; opacity: 0.7;">⌄</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Swap Button -->
+                    <div style="display: flex; justify-content: center; margin: 16px 0;">
+                        <button style="width: 48px; height: 48px; background: #f3f4f6; border: none; border-radius: 50%; cursor: pointer; font-size: 20px;">⇅</button>
+                    </div>
+
+                    <!-- To Chain -->
+                    <div>
+                        <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 8px;">To</label>
+                        <div style="background: linear-gradient(45deg, #8247e5, #a855f7); border-radius: 16px; padding: 20px; color: white;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="chain-info">
+                                    <div style="font-size: 24px;">🟣</div>
+                                    <div>
+                                        <h3 style="font-size: 18px; font-weight: 600;">Polygon</h3>
+                                        <p style="font-size: 14px; opacity: 0.9;">MATIC</p>
+                                    </div>
+                                </div>
+                                <div style="font-size: 20px; opacity: 0.7;">⌄</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Token Input -->
+                    <div class="token-input">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <label style="font-size: 14px; font-weight: 500; color: #374151;">Asset & Amount</label>
+                            <span style="font-size: 14px; color: #6b7280;">Balance: 1,250.45 USDC</span>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                            <div style="display: flex; align-items: center; gap: 8px; background: white; border-radius: 12px; padding: 12px 16px; min-width: 120px;">
+                                <span style="font-size: 20px;">💲</span>
+                                <span style="font-weight: 500;">USDC</span>
+                                <span style="font-size: 14px; color: #9ca3af;">⌄</span>
+                            </div>
+                            <input class="amount-input" type="number" value="100" placeholder="0.00">
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; color: #6b7280;">
+                            <span>≈ $100</span>
+                            <button style="color: #3b82f6; background: none; border: none; cursor: pointer;">Max</button>
+                        </div>
+                    </div>
+
+                    <!-- Bridge Options -->
+                    <div style="margin: 24px 0;">
+                        <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 12px;">Bridge Route</label>
+                        
+                        <div style="padding: 16px; border-radius: 12px; border: 2px solid #3b82f6; background: #eff6ff; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 12px; height: 12px; background: #8b5cf6; border-radius: 50%;"></div>
+                                    <div>
+                                        <h4 style="font-weight: 500; margin: 0;">Wormhole</h4>
+                                        <p style="font-size: 14px; color: #6b7280; margin: 0;">Direct route</p>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <p style="font-weight: 500; margin: 0;">$2.45</p>
+                                    <p style="font-size: 14px; color: #6b7280; margin: 0;">~2 mins</p>
+                                    <p style="font-size: 12px; color: #10b981; font-weight: 500; margin: 0;">Best Rate</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="padding: 16px; border-radius: 12px; border: 2px solid #e5e7eb; background: white;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 50%;"></div>
+                                    <div>
+                                        <h4 style="font-weight: 500; margin: 0;">Axelar</h4>
+                                        <p style="font-size: 14px; color: #6b7280; margin: 0;">Via Gateway</p>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <p style="font-weight: 500; margin: 0;">$3.20</p>
+                                    <p style="font-size: 14px; color: #6b7280; margin: 0;">~3 mins</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bridge Button -->
+                    <button class="bridge-btn">Bridge 100 USDC</button>
+
+                    <!-- Transaction Info -->
+                    <div style="background: #eff6ff; border-radius: 12px; padding: 16px; border: 1px solid #bfdbfe; margin-top: 24px;">
+                        <div style="display: flex; align-items: start; gap: 8px;">
+                            <div style="font-size: 16px; color: #3b82f6;">ℹ️</div>
+                            <div style="font-size: 14px; color: #1e40af;">
+                                <p style="font-weight: 500; margin-bottom: 8px;">Transaction Summary</p>
+                                <ul style="margin: 0; padding-left: 16px; color: #1d4ed8;">
+                                    <li>Bridge Fee: $2.45</li>
+                                    <li>Estimated Time: ~2 mins</li>
+                                    <li>You will receive: ≈ 100 USDC</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Recent Transactions -->
+                    <div class="bridge-card" style="padding: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="font-size: 18px; font-weight: 600; color: #111827;">Recent Transfers</h3>
+                            <button style="color: #3b82f6; font-size: 14px; background: none; border: none; cursor: pointer;">View All</button>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="tx-item">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span>✅</span>
+                                    <div>
+                                        <p style="font-size: 14px; font-weight: 500; margin: 0;">500 USDC</p>
+                                        <p style="font-size: 12px; color: #6b7280; margin: 0;">ETH → POLY</p>
+                                    </div>
+                                </div>
+                                <span style="font-size: 12px; color: #6b7280;">2m</span>
+                            </div>
+                            <div class="tx-item">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span>⏳</span>
+                                    <div>
+                                        <p style="font-size: 14px; font-weight: 500; margin: 0;">0.1 ETH</p>
+                                        <p style="font-size: 12px; color: #6b7280; margin: 0;">POLY → AVAX</p>
+                                    </div>
+                                </div>
+                                <span style="font-size: 12px; color: #6b7280;">5m</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Stats -->
+                    <div class="bridge-card" style="padding: 24px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 16px;">📈 Market Stats</h3>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: #6b7280; font-size: 14px;">Total Volume (24h)</span>
+                                <span style="font-weight: 600; font-size: 14px;">$2.4M</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: #6b7280; font-size: 14px;">Success Rate</span>
+                                <span style="font-weight: 600; color: #10b981; font-size: 14px;">99.8%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-interface" class="interface">
+        <div class="admin-dashboard">
+            <div class="admin-container">
+                <!-- Header -->
+                <div style="margin-bottom: 32px;">
+                    <h1 class="admin-title">� Cosmic Chain Admin Dashboard</h1>
+                    <p style="color: #6b7280;">Monitor and manage your cross-chain bridge platform</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 4px;">Total Transactions</p>
+                            <p class="stat-value">15,847</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 4px;">Total Volume</p>
+                            <p class="stat-value">$4,234,567</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 4px;">Active Users</p>
+                            <p class="stat-value">2,341</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🛡️</div>
+                        <div>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 4px;">System Status</p>
+                            <p style="font-size: 24px; font-weight: bold; color: #10b981;">Healthy</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-grid">
+                    <!-- Recent Transactions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 style="font-size: 20px; font-weight: 600; color: #111827;">Recent Transactions</h2>
+                        </div>
+                        <div style="padding: 24px;">
+                            <div class="tx-item">
+                                <div>
+                                    <p style="font-weight: 500; color: #111827; margin-bottom: 4px;">0x1234...5678</p>
+                                    <p style="color: #6b7280; font-size: 14px;">ETH → POLY</p>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 500; color: #111827; margin-bottom: 4px;">1,000 USDC</p>
+                                    <p style="font-size: 12px; color: #6b7280;">✅ Completed</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <p style="font-size: 12px; color: #6b7280;">2 mins ago</p>
+                                </div>
+                            </div>
+                            <div class="tx-item">
+                                <div>
+                                    <p style="font-weight: 500; color: #111827; margin-bottom: 4px;">0x2345...6789</p>
+                                    <p style="color: #6b7280; font-size: 14px;">BNB → AVAX</p>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 500; color: #111827; margin-bottom: 4px;">0.5 ETH</p>
+                                    <p style="font-size: 12px; color: #6b7280;">⏳ Pending</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <p style="font-size: 12px; color: #6b7280;">5 mins ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="sidebar">
+                        <!-- Escrow Stats -->
+                        <div class="card" style="padding: 24px;">
+                            <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 16px;">💳 Escrow System</h3>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: #6b7280;">Total Balance</span>
+                                    <span style="font-weight: 600; color: #10b981;">$125,678</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: #6b7280;">Pending Escrows</span>
+                                    <span style="font-weight: 600; color: #f59e0b;">23</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Alerts -->
+                        <div class="card" style="padding: 24px;">
+                            <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 16px;">🚨 System Alerts</h3>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="padding: 12px; background: #f3f4f6; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                    <div style="display: flex; align-items: start; gap: 8px;">
+                                        <span>⚠️</span>
+                                        <div>
+                                            <p style="font-size: 14px; color: #111827; margin-bottom: 4px;">High volume on Ethereum</p>
+                                            <p style="font-size: 12px; color: #6b7280;">10m ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="padding: 12px; background: #f3f4f6; border-radius: 8px; border-left: 4px solid #10b981;">
+                                    <div style="display: flex; align-items: start; gap: 8px;">
+                                        <span>✅</span>
+                                        <div>
+                                            <p style="font-size: 14px; color: #111827; margin-bottom: 4px;">System updated successfully</p>
+                                            <p style="font-size: 12px; color: #6b7280;">2h ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="card" style="padding: 24px;">
+                            <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 16px;">⚡ Quick Actions</h3>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <button style="width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">📊 Generate Report</button>
+                                <button style="width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">🔍 Health Check</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Authentication Modal -->
+    <div id="admin-login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: var(--cosmic-glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; max-width: 400px; width: 90%;">
+            <h2 style="color: var(--cosmic-light); text-align: center; margin-bottom: 24px; font-family: 'Orbitron', monospace;">🔒 Admin Authentication</h2>
+            <p style="color: var(--cosmic-gray); text-align: center; margin-bottom: 24px; font-size: 14px;">Access to admin panel requires proper authorization</p>
+            <form id="admin-login-form" style="display: flex; flex-direction: column; gap: 16px;">
+                <input type="email" id="admin-email" placeholder="Admin Email" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--cosmic-light);">
+                <input type="password" id="admin-password" placeholder="Password" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--cosmic-light);">
+                <input type="text" id="admin-2fa" placeholder="2FA Code (Demo: 123456)" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--cosmic-light);">
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" style="flex: 1; padding: 12px; background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary)); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Authenticate</button>
+                    <button type="button" onclick="closeAdminModal()" style="padding: 12px 20px; background: transparent; color: var(--cosmic-gray); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer;">Cancel</button>
+                </div>
+            </form>
+            <div style="margin-top: 20px; padding: 12px; background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 8px;">
+                <p style="color: var(--cosmic-accent); font-size: 12px; margin: 0;"><strong>Demo Credentials:</strong></p>
+                <p style="color: var(--cosmic-light); font-size: 12px; margin: 4px 0 0 0;">Email: admin@cosmicchain.com<br>Password: admin123<br>2FA: 123456</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin authentication state
+        let isAdminAuthenticated = false;
+        let currentAdminUser = null;
+
+        // Demo admin credentials (In production, this would be server-side)
+        const demoCredentials = {
+            email: 'admin@cosmicchain.com',
+            password: 'admin123',
+            twofa: '123456'
+        };
+
+        function showInterface(type) {
+            // Check if trying to access admin panel
+            if (type === 'admin') {
+                if (!isAdminAuthenticated) {
+                    showAdminLoginModal();
+                    return;
+                }
+                
+                // Log admin access
+                console.log('🔐 Admin panel accessed by:', currentAdminUser);
+                logAdminAction('admin_panel_accessed');
+            }
+            
+            // Hide all interfaces
+            document.querySelectorAll('.interface').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.switch-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected interface
+            document.getElementById(type + '-interface').classList.add('active');
+            
+            // Activate corresponding button
+            event.target.classList.add('active');
+        }
+
+        function showAdminLoginModal() {
+            document.getElementById('admin-login-modal').style.display = 'flex';
+            
+            // Focus on email field
+            setTimeout(() => {
+                document.getElementById('admin-email').focus();
+            }, 100);
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+            
+            // Reset to user interface
+            showInterface('user');
+            document.querySelector('.switch-btn[onclick="showInterface(\'user\')"]').classList.add('active');
+        }
+
+        function authenticateAdmin(email, password, twofa) {
+            // Demo authentication (In production, this would be an API call)
+            if (email === demoCredentials.email && 
+                password === demoCredentials.password && 
+                twofa === demoCredentials.twofa) {
+                
+                isAdminAuthenticated = true;
+                currentAdminUser = {
+                    email: email,
+                    role: 'super_admin',
+                    loginTime: new Date().toISOString(),
+                    permissions: ['*'] // All permissions for demo
+                };
+                
+                // Set session timeout (30 minutes for demo)
+                setTimeout(() => {
+                    logoutAdmin('session_timeout');
+                }, 30 * 60 * 1000);
+                
+                return true;
+            }
+            
+            return false;
+        }
+
+        function logoutAdmin(reason = 'manual') {
+            if (isAdminAuthenticated) {
+                logAdminAction('admin_logout', { reason: reason });
+                console.log('🔐 Admin logged out:', currentAdminUser.email, 'Reason:', reason);
+            }
+            
+            isAdminAuthenticated = false;
+            currentAdminUser = null;
+            
+            // Return to user interface
+            showInterface('user');
+            document.querySelector('.switch-btn[onclick="showInterface(\'user\')"]').classList.add('active');
+            
+            if (reason === 'session_timeout') {
+                alert('⚠️ Admin session expired. Please login again.');
+            }
+        }
+
+        function logAdminAction(action, details = {}) {
+            const logEntry = {
+                timestamp: new Date().toISOString(),
+                admin_email: currentAdminUser?.email || 'unknown',
+                action: action,
+                details: details,
+                ip_address: 'demo_ip', // In production, get real IP
+                user_agent: navigator.userAgent
+            };
+            
+            console.log('📋 Admin Action Log:', logEntry);
+            
+            // In production, send to audit logging service
+            // auditService.log(logEntry);
+        }
+
+        // Handle admin login form
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('admin-email').value;
+                const password = document.getElementById('admin-password').value;
+                const twofa = document.getElementById('admin-2fa').value;
+                
+                if (authenticateAdmin(email, password, twofa)) {
+                    closeAdminModal();
+                    showInterface('admin');
+                    document.querySelector('.switch-btn[onclick="showInterface(\'admin\')"]').classList.add('active');
+                    
+                    // Show success message
+                    console.log('✅ Admin authentication successful');
+                    logAdminAction('admin_login_success');
+                } else {
+                    alert('❌ Authentication failed. Please check your credentials.');
+                    logAdminAction('admin_login_failed', { attempted_email: email });
+                }
+            });
+        });
+
+        // Add admin logout button functionality
+        function addAdminLogoutButton() {
+            if (isAdminAuthenticated) {
+                // Add logout button to admin interface (you can customize this)
+                const adminHeader = document.querySelector('.admin-title');
+                if (adminHeader && !document.getElementById('admin-logout-btn')) {
+                    const logoutBtn = document.createElement('button');
+                    logoutBtn.id = 'admin-logout-btn';
+                    logoutBtn.innerHTML = '🔓 Logout Admin';
+                    logoutBtn.style.cssText = 'position: absolute; top: 20px; right: 200px; padding: 8px 16px; background: rgba(239, 68, 68, 0.2); color: var(--cosmic-error); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; cursor: pointer; font-size: 12px;';
+                    logoutBtn.onclick = () => logoutAdmin('manual');
+                    adminHeader.parentNode.appendChild(logoutBtn);
+                }
+            }
+        }
+
+        // Add logout button when admin interface is shown
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target.id === 'admin-interface' && mutation.target.classList.contains('active')) {
+                        addAdminLogoutButton();
+                    }
+                });
+            });
+            
+            const adminInterface = document.getElementById('admin-interface');
+            if (adminInterface) {
+                observer.observe(adminInterface, { attributes: true, attributeFilter: ['class'] });
+            }
+        });
+    </script>
+</body>
+</html>

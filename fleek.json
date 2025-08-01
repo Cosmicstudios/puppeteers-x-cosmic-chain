@@ -1,0 +1,33 @@
+{
+  "site": {
+    "id": "puppeteers-x-cosmic-chain",
+    "name": "Puppeteers.x - Cosmic Chain Platform",
+    "description": "Infinite Puppeteers orchestrate seamless DeFi bridges across cosmic chains",
+    "repository": "https://github.com/infinite-puppeteers/cosmic-chain",
+    "publishDir": "./",
+    "buildCommand": "",
+    "nodeVersion": "16",
+    "distDir": "./",
+    "buildSettings": {
+      "baseUrl": "/",
+      "staticFolder": "./"
+    }
+  },
+  "domains": [
+    {
+      "hostname": "puppeteers.x",
+      "type": "unstoppable"
+    }
+  ],
+  "ipfs": {
+    "gateway": "https://ipfs.fleek.co/ipfs/",
+    "pinning": true,
+    "distributedWeb": true
+  },
+  "branding": {
+    "logo": "🎭",
+    "primaryColor": "#8B5CF6",
+    "secondaryColor": "#06B6D4",
+    "theme": "cosmic-puppeteers"
+  }
+}

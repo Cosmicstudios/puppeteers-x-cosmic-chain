@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Chain - Beyond Boundaries - Complete Features</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cosmic-primary: #6366f1;
+            --cosmic-secondary: #8b5cf6;
+            --cosmic-accent: #06b6d4;
+            --cosmic-success: #10b981;
+            --cosmic-warning: #f59e0b;
+            --cosmic-error: #ef4444;
+            --cosmic-dark: #0f0f23;
+            --cosmic-darker: #050520;
+            --cosmic-light: #f8fafc;
+            --cosmic-gray: #64748b;
+            --cosmic-border: #334155;
+            --cosmic-glass: rgba(255, 255, 255, 0.05);
+            --cosmic-glow: rgba(99, 102, 241, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background: var(--cosmic-darker);
+            color: var(--cosmic-light);
+            overflow-x: hidden;
+        }
+
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #050520 100%);
+            animation: cosmicShift 20s ease-in-out infinite;
+        }
+
+        @keyframes cosmicShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(30deg); }
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: sparkle 10s linear infinite;
+        }
+
+        @keyframes sparkle {
+            from { transform: translateX(0); }
+            to { transform: translateX(-200px); }
+        }
+
+        .cosmic-glass {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cosmic-glow {
+            box-shadow: 0 0 20px var(--cosmic-glow);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', monospace;
+        }
+
+        /* Navigation */
+        .cosmic-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: var(--cosmic-glass);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 24px;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cosmic-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .nav-features {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .feature-badge {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--cosmic-accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .wallet-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--cosmic-success);
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .wallet-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--cosmic-success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 24px 32px;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            color: var(--cosmic-gray);
+            font-size: 20px;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .feature-card {
+            background: var(--cosmic-glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cosmic-primary), var(--cosmic-secondary), var(--cosmic-accent));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .feature-content {
+            padding: 32px;
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cosmic-light);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .feature-description {
+            color: var(--cosmic-gray);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .feature-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cosmic-light);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--cosmic-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .feature-tag {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--cosmic-primary);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        /* Interactive Elements */
+        .cosmic-btn {
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cosmic-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .cosmic-btn:hover::before {
+            left: 100%;
+        }
+
+        .cosmic-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Status Indicators */
+        .status-online {
+            color: var(--cosmic-success);
+        }
+
+        .status-pending {
+            color: var(--cosmic-warning);
+        }
+
+        .status-error {
+            color: var(--cosmic-error);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cosmic-nav {
+                padding: 12px 16px;
+            }
+            
+            .nav-features {
+                display: none;
+            }
+            
+            .cosmic-logo {
+                font-size: 20px;
+            }
+            
+            .main-container {
+                padding: 80px 16px 32px;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    <div class="stars"></div>
+
+    <!-- Navigation -->
+    <nav class="cosmic-nav">
+        <div class="nav-container">
+            <div class="cosmic-logo">
+                <div class="logo-icon">🌌</div>
+                Cosmic Chain
+                <span style="font-size: 14px; opacity: 0.7; margin-left: 8px;">Beyond Boundaries</span>
+            </div>
+            
+            <div class="nav-features">
+                <div class="feature-badge">
+                    <span>⚡</span>
+                    32+ Features
+                </div>
+                <div class="feature-badge">
+                    <span>🌐</span>
+                    6+ Networks
+                </div>
+                <div class="feature-badge">
+                    <span>🛡️</span>
+                    Enterprise Security
+                </div>
+            </div>
+            
+            <div class="wallet-status">
+                <div class="wallet-dot"></div>
+                0x742d...8f3a
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">Complete Feature Ecosystem</h1>
+            <p class="hero-subtitle">Comprehensive blockchain platform with 32+ advanced features across DeFi, Cross-Chain, Trading, and Enterprise solutions</p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <!-- Cross-Chain Bridge -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">🌉</div>
+                        <h3 class="feature-title">Cross-Chain Bridge</h3>
+                    </div>
+                    <p class="feature-description">Transfer tokens seamlessly across 6+ blockchains with optimized routes, competitive fees, and enterprise-grade security.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">6+</div>
+                            <div class="stat-label">Networks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$2.4M</div>
+                            <div class="stat-label">24h Volume</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">99.8%</div>
+                            <div class="stat-label">Success Rate</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Wormhole</span>
+                        <span class="feature-tag">Axelar</span>
+                        <span class="feature-tag">Multi-Protocol</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEX Trading Platform -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">📈</div>
+                        <h3 class="feature-title">DEX Trading Platform</h3>
+                    </div>
+                    <p class="feature-description">Advanced decentralized trading with limit orders, stop-loss, yield farming, and professional-grade analytics.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">500+</div>
+                            <div class="stat-label">Trading Pairs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0.25%</div>
+                            <div class="stat-label">Trading Fee</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$15M</div>
+                            <div class="stat-label">TVL</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">AMM</span>
+                        <span class="feature-tag">Yield Farming</span>
+                        <span class="feature-tag">Analytics</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DeFi Lending Protocol -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">🏦</div>
+                        <h3 class="feature-title">DeFi Lending Protocol</h3>
+                    </div>
+                    <p class="feature-description">Lend and borrow cryptocurrencies with dynamic interest rates, flash loans, and multi-collateral support.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">15%</div>
+                            <div class="stat-label">Max APY</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">20+</div>
+                            <div class="stat-label">Assets</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">80%</div>
+                            <div class="stat-label">Max LTV</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Flash Loans</span>
+                        <span class="feature-tag">Multi-Collateral</span>
+                        <span class="feature-tag">Dynamic Rates</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P2P Escrow System -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">🤝</div>
+                        <h3 class="feature-title">P2P Escrow System</h3>
+                    </div>
+                    <p class="feature-description">Secure peer-to-peer transactions with smart contract escrow, dispute resolution, and multi-signature support.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">5,240</div>
+                            <div class="stat-label">Transactions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">99.2%</div>
+                            <div class="stat-label">Success Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2.5%</div>
+                            <div class="stat-label">Escrow Fee</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Smart Contracts</span>
+                        <span class="feature-tag">Multi-Sig</span>
+                        <span class="feature-tag">Dispute Resolution</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staking & Rewards -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">💰</div>
+                        <h3 class="feature-title">Staking & Rewards</h3>
+                    </div>
+                    <p class="feature-description">Stake tokens across multiple networks, earn rewards, participate in governance, and access exclusive benefits.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">12%</div>
+                            <div class="stat-label">Average APY</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$8.5M</div>
+                            <div class="stat-label">Total Staked</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1,890</div>
+                            <div class="stat-label">Stakers</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Governance</span>
+                        <span class="feature-tag">Auto-Compound</span>
+                        <span class="feature-tag">Flexible Terms</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unified API Platform -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">🔌</div>
+                        <h3 class="feature-title">Unified API Platform</h3>
+                    </div>
+                    <p class="feature-description">Comprehensive REST and WebSocket APIs with 50+ endpoints, real-time data, and enterprise documentation.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">50+</div>
+                            <div class="stat-label">Endpoints</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">99.9%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">10ms</div>
+                            <div class="stat-label">Avg Response</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">REST API</span>
+                        <span class="feature-tag">WebSocket</span>
+                        <span class="feature-tag">Real-time</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio Management -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Portfolio Management</h3>
+                    </div>
+                    <p class="feature-description">Track assets across multiple chains, analyze performance, set alerts, and access detailed analytics.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">1000+</div>
+                            <div class="stat-label">Tracked Tokens</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Real-time</div>
+                            <div class="stat-label">Price Updates</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Advanced</div>
+                            <div class="stat-label">Analytics</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Multi-Chain</span>
+                        <span class="feature-tag">Analytics</span>
+                        <span class="feature-tag">Alerts</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Governance & DAO -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">🗳️</div>
+                        <h3 class="feature-title">Governance & DAO</h3>
+                    </div>
+                    <p class="feature-description">Participate in decentralized governance, vote on proposals, delegate voting power, and shape the platform's future.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">125</div>
+                            <div class="stat-label">Active Proposals</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">85%</div>
+                            <div class="stat-label">Participation</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5.2M</div>
+                            <div class="stat-label">Votes Cast</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Voting</span>
+                        <span class="feature-tag">Delegation</span>
+                        <span class="feature-tag">Proposals</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Trading Tools -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Advanced Trading Tools</h3>
+                    </div>
+                    <p class="feature-description">Professional trading interface with charting, technical indicators, order management, and algorithmic trading.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">30+</div>
+                            <div class="stat-label">Indicators</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Order Types</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">TradingView</div>
+                            <div class="stat-label">Charts</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">TradingView</span>
+                        <span class="feature-tag">Algo Trading</span>
+                        <span class="feature-tag">Professional</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security & Compliance -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">🛡️</div>
+                        <h3 class="feature-title">Security & Compliance</h3>
+                    </div>
+                    <p class="feature-description">Enterprise-grade security with MFA, smart contract audits, KYC/AML compliance, and regulatory reporting.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">SOC2</div>
+                            <div class="stat-label">Certified</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">256-bit</div>
+                            <div class="stat-label">Encryption</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">Monitoring</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">KYC/AML</span>
+                        <span class="feature-tag">Audited</span>
+                        <span class="feature-tag">Enterprise</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Affiliate Program -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">🤝</div>
+                        <h3 class="feature-title">Affiliate Program</h3>
+                    </div>
+                    <p class="feature-description">Comprehensive affiliate system with tiered commissions, referral tracking, marketing tools, and real-time analytics.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">25%</div>
+                            <div class="stat-label">Max Commission</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Tiers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Real-time</div>
+                            <div class="stat-label">Tracking</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Multi-Tier</span>
+                        <span class="feature-tag">Analytics</span>
+                        <span class="feature-tag">Marketing Tools</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile App -->
+            <div class="feature-card">
+                <div class="feature-content">
+                    <div class="feature-header">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="feature-title">Mobile App</h3>
+                    </div>
+                    <p class="feature-description">Native iOS and Android apps with full platform features, biometric security, and push notifications.</p>
+                    <div class="feature-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">iOS</div>
+                            <div class="stat-label">App Store</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Android</div>
+                            <div class="stat-label">Play Store</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.8★</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Native</span>
+                        <span class="feature-tag">Biometric</span>
+                        <span class="feature-tag">Push Notifications</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div style="text-align: center; margin-top: 48px;">
+            <button class="cosmic-btn">Experience All Features</button>
+        </div>
+    </div>
+
+    <script>
+        // Add click interactions for feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.querySelector('.feature-title').textContent;
+                console.log(`Feature clicked: ${title}`);
+                // Add feature-specific actions here
+            });
+        });
+
+        // Add cosmic effects
+        document.addEventListener('mousemove', function(e) {
+            const stars = document.querySelector('.stars');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            stars.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+        });
+    </script>
+</body>
+</html>
