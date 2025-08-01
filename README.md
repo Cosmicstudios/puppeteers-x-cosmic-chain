@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎭 Puppeteers.X - Cosmic Chain Platform
 
 ## Live at: [puppeteers.x](https://puppeteers.x) 🌌
@@ -177,3 +178,7 @@ We are the orchestrators of the decentralized future, pulling the strings that c
 ---
 
 🎭 **Welcome to the future of DeFi. Welcome to puppeteers.x** 🌌
+=======
+# puppeteers-x-cosmic-chain
+Puppeteers.x - Cosmic Chain Bridge Platform - Unstoppable Domain Deployment
+>>>>>>> c245b92a7e79d8d630501d29ff87ed4e732cec4d
