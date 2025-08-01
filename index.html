@@ -1415,9 +1415,10 @@
                 </div>
             </div>
             
-            <div class="wallet-status">
-                <div class="wallet-dot"></div>
-                0x742d...8f3a
+            <div class="wallet-status" onclick="connectWallet()">
+                <div class="wallet-dot" id="nav-wallet-dot"></div>
+                <span id="nav-wallet-address">Connect Wallet</span>
+            </div>
             </div>
         </div>
     </nav>
@@ -1440,9 +1441,9 @@
             <!-- Header -->
             <div class="header">
                 <h1 class="logo">� Cosmic Chain - Beyond Boundaries</h1>
-                <div class="wallet-status">
-                    <div class="wallet-dot"></div>
-                    0x742d...8f3a
+                <div class="wallet-status" id="wallet-status" onclick="connectWallet()">
+                    <div class="wallet-dot" id="wallet-dot"></div>
+                    <span id="wallet-address">Connect Wallet</span>
                 </div>
             </div>
 
@@ -1952,6 +1953,209 @@
             if (adminInterface) {
                 observer.observe(adminInterface, { attributes: true, attributeFilter: ['class'] });
             }
+        });
+
+        // 🔗 Web3 Wallet Connection Functionality
+        let currentAccount = null;
+        let web3 = null;
+
+        // Check if wallet is already connected on page load
+        window.addEventListener('load', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await ethereum.request({ method: 'eth_accounts' });
+                    if (accounts.length > 0) {
+                        await updateWalletDisplay(accounts[0]);
+                    }
+                } catch (error) {
+                    console.log('Error checking wallet connection:', error);
+                }
+            }
+        });
+
+        async function connectWallet() {
+            // Check if MetaMask is installed
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    // Request wallet connection
+                    const accounts = await ethereum.request({ 
+                        method: 'eth_requestAccounts' 
+                    });
+                    
+                    if (accounts.length > 0) {
+                        await updateWalletDisplay(accounts[0]);
+                        
+                        // Listen for account changes
+                        ethereum.on('accountsChanged', (accounts) => {
+                            if (accounts.length > 0) {
+                                updateWalletDisplay(accounts[0]);
+                            } else {
+                                disconnectWallet();
+                            }
+                        });
+                        
+                        // Listen for chain changes
+                        ethereum.on('chainChanged', (chainId) => {
+                            window.location.reload();
+                        });
+                        
+                        console.log('✅ Wallet connected successfully!');
+                        
+                        // Show success notification
+                        showNotification('🎉 Wallet connected successfully!', 'success');
+                        
+                    }
+                } catch (error) {
+                    console.error('Error connecting wallet:', error);
+                    showNotification('❌ Failed to connect wallet', 'error');
+                }
+            } else {
+                // MetaMask not installed
+                showNotification('🦊 Please install MetaMask to connect your wallet', 'warning');
+                
+                // Open MetaMask download page
+                setTimeout(() => {
+                    window.open('https://metamask.io/download/', '_blank');
+                }, 2000);
+            }
+        }
+
+        async function updateWalletDisplay(account) {
+            currentAccount = account;
+            const shortAddress = `${account.slice(0, 6)}...${account.slice(-4)}`;
+            
+            // Update both wallet displays
+            const walletAddress = document.getElementById('wallet-address');
+            const navWalletAddress = document.getElementById('nav-wallet-address');
+            const walletDot = document.getElementById('wallet-dot');
+            const navWalletDot = document.getElementById('nav-wallet-dot');
+            
+            if (walletAddress) walletAddress.textContent = shortAddress;
+            if (navWalletAddress) navWalletAddress.textContent = shortAddress;
+            
+            // Update wallet dots to show connected status
+            if (walletDot) {
+                walletDot.style.background = 'var(--cosmic-success)';
+                walletDot.style.animation = 'pulse 2s ease-in-out infinite';
+            }
+            if (navWalletDot) {
+                navWalletDot.style.background = 'var(--cosmic-success)';
+                navWalletDot.style.animation = 'pulse 2s ease-in-out infinite';
+            }
+            
+            // Get network info
+            try {
+                const chainId = await ethereum.request({ method: 'eth_chainId' });
+                const networkName = getNetworkName(chainId);
+                console.log('🌐 Connected to network:', networkName);
+            } catch (error) {
+                console.log('Error getting network info:', error);
+            }
+        }
+
+        function disconnectWallet() {
+            currentAccount = null;
+            
+            // Reset wallet displays
+            const walletAddress = document.getElementById('wallet-address');
+            const navWalletAddress = document.getElementById('nav-wallet-address');
+            const walletDot = document.getElementById('wallet-dot');
+            const navWalletDot = document.getElementById('nav-wallet-dot');
+            
+            if (walletAddress) walletAddress.textContent = 'Connect Wallet';
+            if (navWalletAddress) navWalletAddress.textContent = 'Connect Wallet';
+            
+            // Reset wallet dots
+            if (walletDot) {
+                walletDot.style.background = 'var(--cosmic-gray)';
+                walletDot.style.animation = 'none';
+            }
+            if (navWalletDot) {
+                navWalletDot.style.background = 'var(--cosmic-gray)';
+                navWalletDot.style.animation = 'none';
+            }
+            
+            console.log('🔌 Wallet disconnected');
+            showNotification('🔌 Wallet disconnected', 'info');
+        }
+
+        function getNetworkName(chainId) {
+            const networks = {
+                '0x1': 'Ethereum Mainnet',
+                '0x89': 'Polygon',
+                '0x38': 'BSC',
+                '0xa86a': 'Avalanche',
+                '0xa4b1': 'Arbitrum',
+                '0xa': 'Optimism',
+                '0x5': 'Goerli Testnet',
+                '0x13881': 'Mumbai Testnet'
+            };
+            return networks[chainId] || `Chain ID: ${chainId}`;
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            
+            // Style the notification
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                padding: '16px 24px',
+                borderRadius: '12px',
+                color: 'white',
+                fontWeight: '500',
+                zIndex: '10000',
+                transform: 'translateX(400px)',
+                transition: 'transform 0.3s ease',
+                maxWidth: '400px',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+            });
+            
+            // Set background color based on type
+            const colors = {
+                success: 'linear-gradient(135deg, var(--cosmic-success), #059669)',
+                error: 'linear-gradient(135deg, var(--cosmic-error), #dc2626)',
+                warning: 'linear-gradient(135deg, var(--cosmic-warning), #d97706)',
+                info: 'linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary))'
+            };
+            notification.style.background = colors[type] || colors.info;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 4000);
+        }
+
+        // 🎯 Enhanced wallet status styling
+        const walletStatusElements = document.querySelectorAll('.wallet-status');
+        walletStatusElements.forEach(element => {
+            element.style.cursor = 'pointer';
+            element.style.transition = 'all 0.3s ease';
+            
+            element.addEventListener('mouseenter', () => {
+                element.style.transform = 'scale(1.05)';
+                element.style.boxShadow = '0 5px 15px rgba(99, 102, 241, 0.3)';
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                element.style.transform = 'scale(1)';
+                element.style.boxShadow = '0 0 0 rgba(99, 102, 241, 0)';
+            });
         });
     </script>
 </body>
